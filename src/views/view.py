@@ -48,9 +48,7 @@ class View(ctk.CTk):
             color_box = ctk.CTkLabel(frame, width=20, height=20, text="", corner_radius=5, fg_color="green")
             color_box.pack(pady=2)
 
-            label = ctk.CTkLabel(frame, text="Libre")
-
-            self.cashier_indicators.append((color_box, label))
+            self.cashier_indicators.append(color_box)
 
         output_frame = ctk.CTkFrame(self)
         output_frame.pack(pady=20)
@@ -96,13 +94,11 @@ class View(ctk.CTk):
             is_free (bool): True si está libre, False si está ocupado.
         """
         if 0 <= cashier_index < len(self.cashier_indicators):
-            color_box, label = self.cashier_indicators[cashier_index]
+            color_box = self.cashier_indicators[cashier_index]
             if is_free:
                 color_box.configure(fg_color="green")
-                label.configure(text="Libre")
             else:
                 color_box.configure(fg_color="red")
-                label.configure(text="Ocupado")
 
     def set_controller(self, controller):
         """
