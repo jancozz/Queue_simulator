@@ -40,10 +40,15 @@ class Controller:
             avg_service = round(sum(c.service_time for c in served) / len(served), 2)
             self.view.show_serviced_clients("\n--- Resumen ---")
             self.view.show_serviced_clients(f"Total clientes atendidos: {len(served)}")
-            self.view.show_serviced_clients(f"Tiempo de atencion promedio: {avg_service}s")
+            self.view.show_serviced_clients(f"Tiempo de atencion promedio: {avg_service} s.")
 
         for i in range(self.simulation.num_cashiers):
             self.view.update_cashier_status(i, True)
+
+        wait_times = [c.wait_time for c in served if c.wait_time is not None]
+        if wait_times:
+            avg_wait = round(sum(wait_times) / len(wait_times), 2)
+            self.view.show_serviced_clients(f"Tiempo de espera promedio: {avg_wait} s.")
 
     def handle_event(self, event_type, data):
         """
@@ -63,5 +68,5 @@ class Controller:
         elif event_type == "client_served":
             client, cashier_id = data
             self.view.after(0, lambda: self.view.show_serviced_clients(
-                f"Cliente {client.id + 1} atendido en caja {cashier_id + 1} | Tiempo: {client.service_time}s"))
+                f"Cliente {client.id + 1} atendido en caja {cashier_id + 1} | Tiempo: {client.service_time} s."))
             self.view.after(0, lambda: self.view.update_cashier_status(cashier_id, True))

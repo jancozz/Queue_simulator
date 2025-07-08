@@ -53,11 +53,11 @@ class View(ctk.CTk):
         output_frame = ctk.CTkFrame(self)
         output_frame.pack(pady=20)
 
-        self.output_box1 = ctk.CTkTextbox(output_frame, width=180, height=350)
+        self.output_box1 = ctk.CTkTextbox(output_frame, width=170, height=350)
         self.output_box1.pack(side="left")
         self.output_box1.configure(state="disabled")
 
-        self.output_box2 = ctk.CTkTextbox(output_frame, width=270, height=350)
+        self.output_box2 = ctk.CTkTextbox(output_frame, width=280, height=350)
         self.output_box2.pack(side="left", padx=(10, 0))
         self.output_box2.configure(state="disabled")
 

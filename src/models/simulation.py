@@ -1,7 +1,7 @@
 import time
 import threading
 import random
-from src.models.queue import Queue
+from .queue import Queue
 from .client import Client
 
 
@@ -80,7 +80,7 @@ class Simulation:
             self.client_id_counter += 1
             self.client_queue.enqueue(client)
             self.controller_callback("new_client", client)
-            time.sleep(random.randint(3, 10))
+            time.sleep(random.randint(2, 10))
 
     def dispatcher(self):
         """

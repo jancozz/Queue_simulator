@@ -16,7 +16,7 @@ class Client:
         """
         self.id = client_id
         self.arrival_time = arrival_time
-        self.service_time = random.randint(8, 16)
+        self.service_time = random.randint(8, 20)
         self.start_service = None
         self.end_service = None
 
@@ -29,5 +29,5 @@ class Client:
             float or None: Tiempo de espera en segundos o None si aún no ha sido atendido.
         """
         if self.start_service:
-            return round(self.start_service - self.arrival_time, 2)
+            return round(self.start_service - self.arrival_time, 1)
         return None
