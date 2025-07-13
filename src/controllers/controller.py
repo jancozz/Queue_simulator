@@ -38,7 +38,7 @@ class Controller:
         served = self.simulation.served_clients
         if served:
             avg_service = round(sum(c.service_time for c in served) / len(served), 2)
-            self.view.show_serviced_clients("\n--- Resumen ---")
+            self.view.show_serviced_clients("\n----------------------- Resumen -----------------------")
             self.view.show_serviced_clients(f"Total clientes atendidos: {len(served)}")
             self.view.show_serviced_clients(f"Tiempo de atencion promedio: {avg_service} s.")
 
