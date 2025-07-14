@@ -80,7 +80,7 @@ class Simulation:
             self.client_id_counter += 1
             self.client_queue.enqueue(client)
             self.controller_callback("new_client", client)
-            time.sleep(random.randint(2, 10))
+            time.sleep(random.randint(2, 8))
 
     def dispatcher(self):
         """
@@ -110,6 +110,12 @@ class Simulation:
             self.cashier_events[cashier_id].set()
 
     def cashier_worker(self, cashier_id):
+        """
+        Simula la atención de clientes por un cajero específico.
+
+        Args:
+            cashier_id (int): Identificador del cajero.
+        """
         while self.running:
             self.cashier_events[cashier_id].wait()
             self.cashier_events[cashier_id].clear()
@@ -142,16 +148,13 @@ class Simulation:
         Devuelve una lista con los clientes que no fueron atendidos completamente.
         Incluye los que están en cola y los que estaban siendo atendidos.
         """
-        # Clientes en espera en la cola
         queue_clients = []
         while not self.client_queue.is_empty():
             queue_clients.append(self.client_queue.dequeue())
 
-        # Clientes en caja que no terminaron su servicio
         in_service_clients = [
             client for client in self.cashier_tasks.values()
             if client is not None and client.end_service is None
         ]
 
         return queue_clients + in_service_clients
-

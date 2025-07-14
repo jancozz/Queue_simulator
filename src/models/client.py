@@ -16,7 +16,7 @@ class Client:
         """
         self.id = client_id
         self.arrival_time = arrival_time
-        self.service_time = random.randint(8, 20)
+        self.service_time = random.randint(5, 15)
         self.start_service = None
         self.end_service = None
 
