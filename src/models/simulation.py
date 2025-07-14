@@ -68,7 +68,6 @@ class Simulation:
         for event in self.cashier_events.values():
             event.set()
 
-        # No uses join con daemon threads
         self.cashier_threads.clear()
 
     def generate_clients(self):

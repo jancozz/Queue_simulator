@@ -18,7 +18,7 @@ class View(ctk.CTk):
         self.num_cashiers = num_cashiers
         self.controller = None
 
-        self.title("Queue Simulator - Bank")
+        self.title("Arko Bank")
         self.geometry("500x550")
 
         self.label_title = ctk.CTkLabel(self, text="Simulador de cola", font=ctk.CTkFont(size=24, weight="bold"))
