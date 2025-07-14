@@ -68,8 +68,8 @@ class Simulation:
         for event in self.cashier_events.values():
             event.set()
 
-        for t in self.cashier_threads:
-            t.join()
+        # No uses join con daemon threads
+        self.cashier_threads.clear()
 
     def generate_clients(self):
         """
@@ -104,28 +104,23 @@ class Simulation:
             if cashier_id is None:
                 break
 
-            time.sleep(1)
+            time.sleep(1.5)
 
             self.cashier_tasks[cashier_id] = client
             self.cashier_events[cashier_id].set()
 
     def cashier_worker(self, cashier_id):
-        """
-        Simula la atención de clientes por un cajero específico.
-
-        Args:
-            cashier_id (int): Identificador del cajero.
-        """
         while self.running:
             self.cashier_events[cashier_id].wait()
             self.cashier_events[cashier_id].clear()
 
-            if not self.running:
+            if not self.running or self.cashier_tasks[cashier_id] is None:
                 break
 
             client = self.cashier_tasks[cashier_id]
-
+            self.controller_callback("update_cashier_status", (cashier_id, False, client.id))
             self.controller_callback("client_being_served", (client, cashier_id))
+
             client.start_service = time.time()
 
             elapsed = 0
@@ -139,4 +134,24 @@ class Simulation:
                 self.served_clients.append(client)
                 self.controller_callback("client_served", (client, cashier_id))
 
+            self.controller_callback("update_cashier_status", (cashier_id, True, None))
             self.available_cashiers.enqueue(cashier_id)
+
+    def get_unattended_clients(self):
+        """
+        Devuelve una lista con los clientes que no fueron atendidos completamente.
+        Incluye los que están en cola y los que estaban siendo atendidos.
+        """
+        # Clientes en espera en la cola
+        queue_clients = []
+        while not self.client_queue.is_empty():
+            queue_clients.append(self.client_queue.dequeue())
+
+        # Clientes en caja que no terminaron su servicio
+        in_service_clients = [
+            client for client in self.cashier_tasks.values()
+            if client is not None and client.end_service is None
+        ]
+
+        return queue_clients + in_service_clients
+

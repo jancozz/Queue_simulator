@@ -42,13 +42,16 @@ class Controller:
             self.view.show_serviced_clients(f"Total clientes atendidos: {len(served)}")
             self.view.show_serviced_clients(f"Tiempo de atencion promedio: {avg_service} s.")
 
-        for i in range(self.simulation.num_cashiers):
-            self.view.update_cashier_status(i, True)
+        unattended_total = self.simulation.get_unattended_clients()
+        self.view.show_serviced_clients(f"Total clientes sin atender: {len(unattended_total)}")
 
         wait_times = [c.wait_time for c in served if c.wait_time is not None]
         if wait_times:
             avg_wait = round(sum(wait_times) / len(wait_times), 2)
             self.view.show_serviced_clients(f"Tiempo de espera promedio: {avg_wait} s.")
+
+        for i in range(self.simulation.num_cashiers):
+            self.view.update_cashier_status(i, True, None)
 
     def handle_event(self, event_type, data):
         """
@@ -63,7 +66,13 @@ class Controller:
 
         elif event_type == "client_being_served":
             client, cashier_id = data
-            self.view.after(0, lambda: self.view.update_cashier_status(cashier_id, False))
+            self.view.after(0, lambda: self.view.update_cashier_status(cashier_id, False, client.id + 1))
+
+
+        elif event_type == "update_cashier_status":
+            cashier_id, is_free, client_id = data
+            self.view.update_cashier_status(cashier_id, is_free, client_id)
+
 
         elif event_type == "client_served":
             client, cashier_id = data

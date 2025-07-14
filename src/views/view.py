@@ -45,7 +45,7 @@ class View(ctk.CTk):
             cashier_label = ctk.CTkLabel(frame, text=f"Caja {i + 1}")
             cashier_label.pack(pady=(0, 2))
 
-            color_box = ctk.CTkLabel(frame, width=20, height=20, text="", corner_radius=5, fg_color="green")
+            color_box = ctk.CTkLabel(frame, width=25, height=25, text="", corner_radius=5, fg_color="green", font=ctk.CTkFont(size=14, weight="bold"))
             color_box.pack(pady=2)
 
             self.cashier_indicators.append(color_box)
@@ -85,20 +85,21 @@ class View(ctk.CTk):
         self.output_box2.see("end")
         self.output_box2.configure(state="disabled")
 
-    def update_cashier_status(self, cashier_index, is_free):
+    def update_cashier_status(self, cashier_index, is_free, client_id=None):
         """
         Cambia el color y estado de un cajero en la interfaz.
 
         Args:
             cashier_index (int): Índice del cajero.
             is_free (bool): True si está libre, False si está ocupado.
+            client_id (int or None): Si ocupado, se muestra el ID del cliente.
         """
         if 0 <= cashier_index < len(self.cashier_indicators):
             color_box = self.cashier_indicators[cashier_index]
             if is_free:
-                color_box.configure(fg_color="green")
+                color_box.configure(fg_color="green", text="")
             else:
-                color_box.configure(fg_color="red")
+                color_box.configure(fg_color="red", text=str(client_id) if client_id is not None else "")
 
     def set_controller(self, controller):
         """
